@@ -1,0 +1,11 @@
+FROM node:10-alpine
+WORKDIR "/app"
+COPY ./package*.json ./
+RUN npm install
+COPY . .
+#This will not work for integration with Travis CI and AWS EBS instead you need to right RUN command
+#CMD ["npm","run","build"]
+#CMD ["npm", "run", "dev"] ---> use this for developement deployment. This "dev" is defined in package.json
+
+CMD ["npm", "run", "start"] 
+#---> use this for production like envt. This "start" is defined in package.json
