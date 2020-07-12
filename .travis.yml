@@ -1,0 +1,25 @@
+sudo: required
+services:
+        - docker
+#before_install and script is used to run the tests and we can not run the tests directly in product envt or can't define the tests in prod deployment so using Dockerfile.dev from client container to run the tests. Also we will be usinf docker username for the tests.
+before_install:
+        - docker build -t ameysontakke1/react-test -f ./client/Dockerfile.dev ./client
+script:
+        - docker run ameysontakke1/react-test npm test -- --coverage
+
+# Below parameter after_sucess--> need to define each of the container to push it to dockerhub --> 
+after_sucess:
+        - docker build -t ameysontakke1/multi-client ./client
+        - docker build -t ameysontakke1/multi-nginx ./nginx
+        - docker build -t ameysontakke1/multi-server ./server
+        - docker build -t ameysontakke1/multi-worker ./worker
+
+        ## Login to Docker
+        - echo "$DOCKER_PASS"| docker login -u "$DOCKER_ID" --pasword-stdin
+
+        ## Take those images and push to docker hub
+        - docker push ameysontakke1/multi-client
+        - docker push ameysontakke1/multi-nginx
+        - docker push ameysontakke1/multi-server
+        - docker push ameysontakke1/multi-worker
+
