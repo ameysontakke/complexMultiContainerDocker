@@ -15,7 +15,7 @@ after_sucess:
         - docker build -t ameysontakke1/multi-worker ./worker
 
         ## Login to Docker
-        - echo "$DOCKER_PASS"| docker login -u "$DOCKER_ID" --pasword-stdin
+        - echo "$DOCKER_PASS"| docker login -u "$DOCKER_ID" --password-stdin
 
         ## Take those images and push to docker hub
         - docker push ameysontakke1/multi-client
