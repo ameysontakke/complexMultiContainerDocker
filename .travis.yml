@@ -23,3 +23,17 @@ after_sucess:
         - docker push ameysontakke1/multi-server
         - docker push ameysontakke1/multi-worker
 
+# Below parameters are used to deploy the build on EBS:
+deploy:
+        provider: elasticbeanstalk
+        region: ap-south-1
+        app: multi-docker
+        env: MultiDocker-env
+        # Bucket Name is S3 bucket name
+        bucket_name: elasticbeanstalk-ap-south-1-472308837270
+        bucket_path: docker_multi
+        on:
+                branch: master
+                access_key_id: $AWS_ACCESS_KEY
+                secret_access_key:
+                        secure: $AWS_SECRET_KEY
