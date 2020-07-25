@@ -1,11 +1,13 @@
-sudo: required
+language: generic
+#sudo: required
+os: ubuntu
 services:
         - docker
 #before_install and script is used to run the tests and we can not run the tests directly in product envt or can't define the tests in prod deployment so using Dockerfile.dev from client container to run the tests. Also we will be usinf docker username for the tests.
 before_install:
         - docker build -t ameysontakke1/react-test -f ./client/Dockerfile.dev ./client
 script:
-        - docker run ameysontakke1/react-test npm test -- --coverage
+        - docker run -e CI=true ameysontakke1/react-test npm test -- --coverage
 
 # Below parameter after_sucess--> need to define each of the container to push it to dockerhub --> 
 after_sucess:
@@ -26,14 +28,13 @@ after_sucess:
 # Below parameters are used to deploy the build on EBS:
 deploy:
         provider: elasticbeanstalk
-        region: ap-south-1
-        app: multi-docker
-        env: MultiDocker-env
+        region: "ap-south-1"
+        app: "multi-docker"
+        env: "MultiDocker-env"
         # Bucket Name is S3 bucket name
-        bucket_name: elasticbeanstalk-ap-south-1-472308837270
-        bucket_path: docker_multi
+        bucket_name: "elasticbeanstalk-ap-south-1-472308837270"
+        bucket_path: "docker_multi"
         on:
                 branch: master
         access_key_id: $AWS_ACCESS_KEY
-        secret_access_key:
-                secure: $AWS_SECRET_KEY
+        secret_access_key: $AWS_SECRET_KEY
